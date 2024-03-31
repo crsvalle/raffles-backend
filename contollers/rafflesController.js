@@ -10,7 +10,7 @@ rafflesController.get("/:id", validateId,
             const { id } = request.params;
             const raffle = await getRaffleById(Number(id))
             if (raffle) {
-                response.status(200).json({ data: student });
+                response.status(200).json({ data: raffle });
             } else {
                 return response.status(404).json({ error: `id: ${id} is not found` })
             }
@@ -19,3 +19,5 @@ rafflesController.get("/:id", validateId,
         }
     },
 );
+
+module.exports = rafflesController;
