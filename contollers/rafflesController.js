@@ -1,7 +1,7 @@
 const { Router } = require("express");
-const { getAllRaffles, getRaffleById, createRaffle } = require("../queries/rafflesQueries")
-const { getParticipantsOfRaffle, createParticipant} = require('../queries/participantsQueries')
-const { validateId, validateRaffle, validateRaffleExist } = require("../validations/index")
+const { getAllRaffles, getRaffleById, createRaffle, updateRaffle } = require("../queries/rafflesQueries")
+const { getParticipantsOfRaffle, createParticipant } = require('../queries/participantsQueries')
+const { validateId, validateRaffle, validateRaffleExist, validateRaffleNotOver } = require("../validations/index")
 
 const rafflesController = Router();
 
@@ -51,15 +51,15 @@ rafflesController.get('/:id/participants', validateId, validateRaffleExist,
 
 rafflesController.post('/:id/participants', validateId, validateRaffleExist,
     async (request, response) => {
-        try{
+        try {
             const { id } = request.params;
             const participant = { raffle_id: id, ...request.body };
             const createdParticipant = await createParticipant(participant)
-            if (createdParticipant){
-                response.status(201).json({data: createdParticipant})
+            if (createdParticipant) {
+                response.status(201).json({ data: createdParticipant })
             }
-        }catch(error){
-            response.status(500).json({error: error.message})
+        } catch (error) {
+            response.status(500).json({ error: error.message })
         }
     }
 )
@@ -74,5 +74,16 @@ rafflesController.post('/', validateRaffle, async (request, response) => {
         response.status(500).json({ error: error.message });
     }
 });
+
+rafflesController.put('/:id/winner', validateId, validateRaffleExist, validateRaffleNotOver,
+    async (request, response) => {
+        try {
+            const { id } = request.params;
+            const updatedRaffle = await updateRaffle(id)
+            response.status(200).json({ data: updatedRaffle })
+        } catch (error) {
+            response.status(500).json({ error: error.message })
+        }
+    });
 
 module.exports = rafflesController;

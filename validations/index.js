@@ -3,6 +3,14 @@ const { getRaffleById } = require("../queries/rafflesQueries")
 const raffle_fields = [
     'name', 'secret_token'
 ]
+const validateRaffleNotOver = async (req, res, next) => {
+    const { id } = req.params;
+    const raffle = await getRaffleById(id); 
+    if (raffle && raffle.ended) {
+        return res.status(400).json({ error: "The raffle has already ended." });
+    }
+    next();
+}
 
 const validateId = (req, res, next) => {
     const { id } = req.params;
@@ -50,4 +58,4 @@ const validateRaffle = (req, res, next) => {
     next();
 }
 
-module.exports = { validateId, validateRaffle, validateRaffleExist }
+module.exports = { validateId, validateRaffle, validateRaffleExist, validateRaffleNotOver }
