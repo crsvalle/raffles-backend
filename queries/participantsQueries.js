@@ -5,9 +5,10 @@ const getAllParticipants = async () => {
 }
 const getParticipantsOfRaffle = async (id) => {
     return db.any(`
-    SELECT * 
-    FROM participants 
-    WHERE raffle_id = $1`, [id])
+        SELECT * 
+        FROM participants 
+        WHERE raffle_id = $1`
+    , [id])
 }
 
 const createParticipant = async (participant) => {
@@ -20,8 +21,18 @@ const createParticipant = async (participant) => {
     `, [raffle_id, first_name, last_name, email, phone])
 }
 
+const getWinnerFromRaffle = async (id) => {
+    return db.oneOrNone(`
+        SELECT participants.*
+        FROM participants
+        JOIN raffles ON participants.id = raffles.winner_id
+        WHERE raffles.id = $1;
+    `, [id])
+}
+
 module.exports = {
     getAllParticipants,
     getParticipantsOfRaffle,
-    createParticipant
+    createParticipant,
+    getWinnerFromRaffle
 }

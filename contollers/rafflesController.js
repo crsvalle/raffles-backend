@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { getAllRaffles, getRaffleById, createRaffle, updateRaffle } = require("../queries/rafflesQueries")
-const { getParticipantsOfRaffle, createParticipant } = require('../queries/participantsQueries')
+const { getParticipantsOfRaffle, createParticipant, getWinnerFromRaffle } = require('../queries/participantsQueries')
 const { validateId, validateRaffle, validateRaffleExist, validateRaffleNotOver } = require("../validations/index")
 
 const rafflesController = Router();
@@ -74,6 +74,22 @@ rafflesController.post('/', validateRaffle, async (request, response) => {
         response.status(500).json({ error: error.message });
     }
 });
+
+rafflesController.get('/:id/winner', validateId, validateRaffleExist,
+    async (request, response) => {
+        try {
+            const { id } = request.params;
+            const winner = await getWinnerFromRaffle(id)
+            if(winner){
+                response.status(200).json({ data: winner })
+            }
+            else{
+                response.status(404).json({error: `There is no winner for this raffle yet.`})
+            }
+        } catch (error) {
+            response.status(500).json({ error: error.message })
+        }
+    });
 
 rafflesController.put('/:id/winner', validateId, validateRaffleExist, validateRaffleNotOver,
     async (request, response) => {

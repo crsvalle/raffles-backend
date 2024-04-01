@@ -19,7 +19,6 @@ const createRaffle = async (raffle) => {
     );
 }
 
-
 const updateRaffle = async (id) => {
     return db.oneOrNone(
         `
@@ -41,7 +40,6 @@ const updateRaffle = async (id) => {
 const deleteRaffle = async (id) => {
     return db.oneOrNone("DELETE FROM raffles WHERE id = $1 RETURNING *;", [id]);
 };
-
 
 module.exports = {
     getAllRaffles,
