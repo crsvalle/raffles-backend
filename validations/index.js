@@ -5,8 +5,11 @@ const raffle_fields = [
 ]
 const validateRaffleNotOver = async (req, res, next) => {
     const { id } = req.params;
+    if (Object.keys(req.body).length > 0){
+        return res.status(400).json({error: `The request body must be empty.`})
+    }
     const raffle = await getRaffleById(id); 
-    if (raffle && raffle.ended) {
+    if (raffle.ended) {
         return res.status(400).json({ error: "The raffle has already ended." });
     }
     next();
