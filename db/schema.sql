@@ -6,7 +6,9 @@ CREATE DATABASE raffles_dev;
 CREATE TABLE raffles (
     id SERIAL PRIMARY KEY,
     name varchar(255),
-    secret_token varchar(255) NOT NULL
+    secret_token varchar(255) NOT NULL,
+    ended BOOLEAN DEFAULT FALSE,
+    winner_id INTEGER DEFAULT NULL
 );
 
 CREATE TABLE participants (
