@@ -7,5 +7,8 @@ const validateId = (req, res, next) => {
     next();
 }
 
+const validateRaffle = (req, res, next) => {
 
-module.exports = { validateId }
+}
+
+module.exports = { validateId, validateRaffle }

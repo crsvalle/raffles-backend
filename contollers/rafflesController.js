@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getAllRaffles, getRaffleById } = require("../queries/rafflesQueries")
+const { getAllRaffles, getRaffleById, createRaffle } = require("../queries/rafflesQueries")
 const { getParticipantsOfRaffle } = require('../queries/participantsQueries')
 const { validateId } = require("../validations/index")
 
@@ -51,6 +51,17 @@ rafflesController.get('/:id/participants', validateId,
             response.status(500).json({ error: error.message });
         }
     }
-)
+);
+
+rafflesController.post('/', async (request, response) => {
+    try {
+        const createdRaffle = await createRaffle(request.body);
+        if (createdRaffle) {
+            response.status(201).json({ data: createdRaffle });
+        }
+    } catch (error) {
+        response.status(500).json({ error: error.message });
+    }
+});
 
 module.exports = rafflesController;
