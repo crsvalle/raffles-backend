@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { getAllRaffles, getRaffleById, createRaffle } = require("../queries/rafflesQueries")
 const { getParticipantsOfRaffle } = require('../queries/participantsQueries')
-const { validateId } = require("../validations/index")
+const { validateId, validateRaffle } = require("../validations/index")
 
 const rafflesController = Router();
 
@@ -53,7 +53,7 @@ rafflesController.get('/:id/participants', validateId,
     }
 );
 
-rafflesController.post('/', async (request, response) => {
+rafflesController.post('/', validateRaffle, async (request, response) => {
     try {
         const createdRaffle = await createRaffle(request.body);
         if (createdRaffle) {
