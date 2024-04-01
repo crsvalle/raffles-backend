@@ -1,3 +1,5 @@
+const { getRaffleById } = require("../queries/rafflesQueries")
+
 const raffle_fields = [
     'name', 'secret_token'
 ]
@@ -8,14 +10,25 @@ const validateId = (req, res, next) => {
         return res.status(400).json({ error: `${id} is not a valid id` })
     }
 
+    res.id = Number(id);
+    next();
+}
+
+const validateRaffleExist = async (req, res, next) => {
+    const { id } = res;
+    const raffle = await getRaffleById(id);
+    if (!raffle){
+        return res.status(404).json({error: `Cannot find ID: ${id}`})
+    }
+
     next();
 }
 
 const validateRaffle = (req, res, next) => {
     const raffleBody = req.body;
 
-    for (const field of raffle_fields){
-        if (!raffleBody.hasOwnProperty(field)){
+    for (const field of raffle_fields) {
+        if (!raffleBody.hasOwnProperty(field)) {
             return res.status(400).json({
                 error: `${field} is missing or wrong, recevied ${raffleBody[field]}`
             })
@@ -27,8 +40,8 @@ const validateRaffle = (req, res, next) => {
         }
     }
 
-    for (const field in raffleBody){
-        if (typeof raffleBody[field] !== 'string'){
+    for (const field in raffleBody) {
+        if (typeof raffleBody[field] !== 'string') {
             return res.status(400).json({ error: `'${raffleBody[field]}' field must be a string.` })
         }
 
@@ -37,4 +50,4 @@ const validateRaffle = (req, res, next) => {
     next();
 }
 
-module.exports = { validateId, validateRaffle }
+module.exports = { validateId, validateRaffle, validateRaffleExist }

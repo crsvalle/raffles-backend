@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { getAllRaffles, getRaffleById, createRaffle } = require("../queries/rafflesQueries")
 const { getParticipantsOfRaffle } = require('../queries/participantsQueries')
-const { validateId, validateRaffle } = require("../validations/index")
+const { validateId, validateRaffle, validateRaffleExist } = require("../validations/index")
 
 const rafflesController = Router();
 
@@ -22,7 +22,7 @@ rafflesController.get("/:id", validateId,
     async (request, response) => {
         try {
             const { id } = request.params;
-            const raffle = await getRaffleById(Number(id))
+            const raffle = await getRaffleById(id)
             if (raffle) {
                 response.status(200).json({ data: raffle });
             } else {
@@ -34,15 +34,11 @@ rafflesController.get("/:id", validateId,
     },
 );
 
-rafflesController.get('/:id/participants', validateId,
+rafflesController.get('/:id/participants', validateId, validateRaffleExist,
     async (request, response) => {
         try {
             const { id } = request.params;
-            const checkIfExist = await getRaffleById(Number(id))
-            if (!checkIfExist) {
-                return response.status(404).json({ error: `id: ${id} is not found` })
-            }
-            const raffles = await getParticipantsOfRaffle(Number(id))
+            const raffles = await getParticipantsOfRaffle(id)
             if (raffles) {
                 response.status(200).json({ data: raffles });
             }
