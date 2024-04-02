@@ -1,5 +1,9 @@
 const { getRaffleById } = require("../queries/rafflesQueries")
 
+const participant_fields = [
+    'first_name', 'last_name', 'email', 'phone'
+];
+
 const raffle_fields = [
     'name', 'secret_token'
 ]
@@ -61,4 +65,32 @@ const validateRaffle = (req, res, next) => {
     next();
 }
 
-module.exports = { validateId, validateRaffle, validateRaffleExist, validateRaffleNotOver }
+const validateParticipant = (req, res, next) => {
+    const participantBody = req.body;
+
+    for (const field of participant_fields) {
+        if (!participantBody.hasOwnProperty(field)) {
+            return res.status(400).json({
+                error: `${field} is missing or wrong, received ${participantBody[field]}`
+            });
+        }
+    }
+
+    for (const field in participantBody) {
+        if (!participant_fields.includes(field)) {
+            return res.status(400).json({ error: `${field} is not allowed.` });
+        }
+    }
+
+    for (const field in participantBody) {
+        if (typeof participantBody[field] !== 'string' && field !== 'phone') {
+            return res.status(400).json({ error: `'${field}' field must be a string.` });
+        }
+    }
+    if (!participantBody['phone']){
+        participantBody['phone'] = null;
+    }
+
+    next();
+}
+module.exports = { validateId, validateRaffle, validateRaffleExist, validateRaffleNotOver, validateParticipant}
