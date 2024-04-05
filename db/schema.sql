@@ -8,7 +8,8 @@ CREATE TABLE raffles (
     name varchar(255),
     secret_token varchar(255) NOT NULL,
     ended BOOLEAN DEFAULT FALSE,
-    winner_id INTEGER DEFAULT NULL
+    winner_id INTEGER DEFAULT NULL,
+    created_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE participants (
@@ -17,5 +18,6 @@ CREATE TABLE participants (
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    phone TEXT
+    phone TEXT,
+    created_at TIMESTAMPTZ NOT NULL
 );

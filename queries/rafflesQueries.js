@@ -13,14 +13,13 @@ const createRaffle = async (raffle) => {
     const { name, secret_token } = raffle;
     const hashedSecret = await bcrypt.hash(secret_token, 10);
     return db.oneOrNone(`
-        INSERT INTO raffles (name, secret_token)
-        VALUES ($1, $2)
+        INSERT INTO raffles (name, secret_token, created_at)
+        VALUES ($1, $2, CURRENT_TIMESTAMP)
         RETURNING *;
         `,
         [name, hashedSecret]
     );
 }
-
 
 const updateRaffle = async (id) => {
     return db.oneOrNone(
