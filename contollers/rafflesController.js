@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { getAllRaffles, getRaffleById, createRaffle, updateRaffle } = require("../queries/rafflesQueries")
 const { getParticipantsOfRaffle, createParticipant, getWinnerFromRaffle } = require('../queries/participantsQueries')
-const { validateId, validateRaffle, validateRaffleExist, validateRaffleNotOver, validateParticipant } = require("../validations/index")
+const { validateId, validateRaffle, validateRaffleExist, validateRaffleNotOver, validateParticipant, validateSecret } = require("../validations/index")
 
 const rafflesController = Router();
 
@@ -91,11 +91,12 @@ rafflesController.get('/:id/winner', validateId, validateRaffleExist,
         }
     });
 
-rafflesController.put('/:id/winner', validateId, validateRaffleExist, validateRaffleNotOver,
+rafflesController.put('/:id/winner', validateId, validateRaffleExist, validateRaffleNotOver, validateSecret,
     async (request, response) => {
         try {
             const { id } = request.params;
-            const updatedRaffle = await updateRaffle(id)
+            const { secret_token } = request.body;
+            const updatedRaffle = await updateRaffle(id, secret_token)
             response.status(200).json({ data: updatedRaffle })
         } catch (error) {
             response.status(500).json({ error: error.message })

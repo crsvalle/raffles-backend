@@ -1,4 +1,5 @@
 const db = require("../db/dbConfig");
+const bcrypt = require('bcrypt');
 
 const getAllRaffles = async () => {
     return db.manyOrNone("SELECT * FROM raffles")
@@ -10,14 +11,16 @@ const getRaffleById = async (id) => {
 
 const createRaffle = async (raffle) => {
     const { name, secret_token } = raffle;
+    const hashedSecret = await bcrypt.hash(secret_token, 10);
     return db.oneOrNone(`
         INSERT INTO raffles (name, secret_token)
         VALUES ($1, $2)
         RETURNING *;
         `,
-        [name, secret_token],
+        [name, hashedSecret]
     );
 }
+
 
 const updateRaffle = async (id) => {
     return db.oneOrNone(
