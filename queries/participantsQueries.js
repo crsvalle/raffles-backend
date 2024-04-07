@@ -17,7 +17,7 @@ const createParticipant = async (participant) => {
     return db.oneOrNone(`
         INSERT INTO participants (raffle_id, first_name, last_name, email, phone, created_at)
         VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)
-        RETURNING id;
+        RETURNING *;
     `, [raffle_id, first_name, last_name, email, phone])
 }
 

@@ -24,8 +24,8 @@ const validateRaffleNotOver = async (req, res, next) => {
     }
 
     const size = await getParticipantsOfRaffle(id)
-    if (size < 1){
-        return res.status(400).json({error:"There is no participants in this raffle for it to end."})
+    if (size < 1) {
+        return res.status(400).json({ error: "There is no participants in this raffle for it to end." })
     }
     next();
 }
@@ -70,6 +70,10 @@ const validateFields = (req, res, next, fields) => {
         if (typeof body[field] !== 'string' && field !== 'phone') {
             return res.status(400).json({ error: `'${field}' field must be a string.` });
         }
+        
+        if (body[field].trim() === '' && field !== 'phone') {
+            return res.status(400).json({ error: `'${field}' field cannot be empty.` });
+        }
     }
 
     if (!body['phone'] && fields === participant_fields) {
@@ -89,7 +93,7 @@ const validateSecret = async (req, res, next) => {
 
     const match = await bcrypt.compare(secret_token, raffle.secret_token);
     if (!match) {
-        return res.status(403).json({ error: 'Wrong Secret! Raffle Will Not End!' });
+        return res.status(403).json({ error: 'Wrong Secret!' });
     }
 
     req.raffle = raffle;
