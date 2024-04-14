@@ -80,6 +80,9 @@ const validateFields = (req, res, next, fields) => {
         body['phone'] = null;
     }
 
+    if (body['phone'] && body['phone'].trim().length !== 10) {
+        return res.status(400).json({ error: `'Phone' field must be exactly 10 characters.` });
+    }
     next();
 };
 const validateSecret = async (req, res, next) => {
