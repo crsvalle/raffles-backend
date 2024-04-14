@@ -1,5 +1,3 @@
-\c raffles_dev;
-
 INSERT INTO raffles (name, secret_token, ended, winner_id, created_at) VALUES 
     ('Vacation Raffle', 's3cr3tT0k3n1', FALSE, NULL, CURRENT_TIMESTAMP),
     ('Holiday Raffle', 'test', FALSE, NULL, CURRENT_TIMESTAMP),

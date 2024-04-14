@@ -1,7 +1,5 @@
-DROP DATABASE IF EXISTS raffles_dev;
-CREATE DATABASE raffles_dev;
-
-\c raffles_dev;
+DROP TABLE IF EXISTS participants;
+DROP TABLE IF EXISTS raffles;
 
 CREATE TABLE raffles (
     id SERIAL PRIMARY KEY,

@@ -9,9 +9,6 @@ app.use(express.json())
 const rafflesController = require('./contollers/rafflesController.js')
 app.use('/raffles',  rafflesController)
 
-const participantsController = require("./contollers/participantsController.js")
-app.use('/participants', participantsController)
-
 app.get('/', (req, res) => {
     res.status(200).json({data: "Server working!"})
 })
